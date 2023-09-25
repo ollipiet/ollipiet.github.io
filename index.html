@@ -1,0 +1,212 @@
+<head>
+    <script src="https://unpkg.com/tram-lite@4.0.0-beta.1/output/tram-lite.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-markdown.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-twilight.min.css">
+</head>
+<body>
+<template tl-definition>
+  <bio-machine text="true" value="text">
+    <style>
+      body {
+        height: 100vh;
+        margin: 0;
+        display: grid;
+        place-items: center;
+        background: #607D8B;
+      }
+
+      .token.url {
+        color: oklch(62% 0.25 220);
+      }
+      .token.tag {
+        color: oklch(68% 0.25 220);
+      }
+      .token.punctuation {
+        color: oklch(78% 0.25 220);
+      }
+      .token.content {
+        color: oklch(88% 0.25 220);
+      }
+
+      :host {
+        background: #37474F;
+        color: white;
+        border: 1px solid black;
+        box-shadow: inset 0 1px 1px rgba(255 255 255 / 0.2);
+        display: block;
+        max-width: 350px;
+        margin-trim: block;
+        border-radius: 2px;
+      }
+      
+      .bio {
+        padding: 1.5rem 1.6rem 0.6rem 1.6rem;
+        display: block;
+        word-break: break-word;
+        line-height: 1.4;
+        
+        &[data-type="markdown"] {
+          font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+          font-size: 0.75rem;
+          white-space: pre-wrap;
+        }
+        
+        &[data-type="text"] {
+          font-family: Optima, Candara, 'Noto Sans', source-sans-pro, sans-serif;
+          line-height: 1.3;
+        }
+        
+        &[data-type="html"] {
+          font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+          font-size: 0.71rem;
+          white-space: pre-wrap;
+        }
+        
+        :where(h1, h2, h3, h4) {
+          margin-block: 0 1rem;
+          border-bottom: 1px dotted rgb(255 255 255 / 0.2);
+        }
+        
+        & p {
+          margin: 0 0 1rem 0;
+          text-balance: pretty;
+        }
+        & :last-child {
+          margin-block-end: 0;
+        }
+        & a {
+          color: #42A5F5;
+        }
+      }
+      
+      fieldset {
+        margin: 1rem 2px 2px 2px;
+        padding: 0;
+        border: 0;
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        background: #263238;
+        color: white;
+        padding: 1rem;
+        & input {
+          margin: 0;
+        }
+        & label {
+          font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+          font-size: 0.75rem;
+          display: flex;
+          gap: 0.25rem;
+          align-items: center;
+        }
+      }
+    </style>
+
+    <div class="bio"></div>
+
+    <fieldset>
+      <label>
+        <input 
+          type="radio" 
+          name="output"
+          value="text"
+          checked
+          tl-controlled
+          tl-hostattr="text"
+          tl-trigger="change"
+          tl-targetattr="checked"
+          checked
+       >
+        Text
+      </label>
+      <label>
+        <input 
+          type="radio" 
+          name="output"
+          value="html"
+          tl-controlled
+          tl-hostattr="html"
+          tl-trigger="change"
+          tl-targetattr="checked"
+        > 
+        HTML
+      </label>
+      <label>
+        <input 
+          type="radio" 
+          name="output"
+          value="markdown"
+          tl-controlled
+          tl-hostattr="markdown"
+          tl-trigger="change"
+          tl-targetattr="checked"
+        >
+        Markdown
+      </label>
+    </fieldset>
+    
+    <!-- script tag to to process the value and change content -->
+    <script tl-effect tl-dependencies="value">      
+      const value = this.getAttribute("value")
+      
+      if (value === undefined) {
+        return;
+      }
+      
+      const bioMarkdown = this.querySelector("div").innerText;
+      const bioEl = this.shadowRoot.querySelector(".bio");
+      bioEl.dataset.type = value;
+      
+      // replace with processed markdown
+      if (value === "text") {
+        bioEl.innerHTML = marked.parse(bioMarkdown);
+        
+      // replace with raw markdown
+      } else if (value === "markdown") {
+        const syntaxHighlightedMarkdown = Prism.highlight(bioMarkdown, Prism.languages.markdown, 'markdown');
+        bioEl.innerHTML = syntaxHighlightedMarkdown;
+        
+      // replace with html
+      } else if (value === "html") {
+        let html = marked.parse(bioMarkdown);
+                
+        const spacedHTML = html.replace(/\n/g, "\n\n");
+                
+        const syntaxHighlightedHTML = Prism.highlight(spacedHTML, Prism.languages.html, 'html');    
+        
+        bioEl.innerHTML = syntaxHighlightedHTML.trim();
+      }
+    </script>
+    
+    <script tl-effect tl-dependencies="text html markdown">
+      const newValue = this.shadowRoot.querySelector(':checked')?.value;
+      
+      if (this.getAttribute('value') === newValue || newValue === undefined) {
+        return;
+      }
+      
+      this.setAttribute('value', newValue);
+      
+      this.shadowRoot.querySelectorAll(`input:not([value="${newValue}"])`).forEach((input) => {
+        this.removeAttribute(input.value)
+      });
+    </script>
+    
+  </bio-machine>
+  
+</template>
+
+<bio-machine>
+  <div>### Hey!
+    
+I’m a **developer and a journalist** and I am also volunteering with journalistic deep and throrough investicative techniques in [Tutkivan journalismin yhdistys](https://tutki.fi).
+
+This year I graduated [Tampere University](http://tuni.fi), and I am interested in photography and visualizations.
+
+Recently I have worked in Yle News, and Finnish Sanoma Oy.
+
+I’m big on better newspaper stories and creation of involved exclusive data stories to explain the world.</div>
+</bio-machine>
+</body>
