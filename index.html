@@ -23,7 +23,22 @@
       }
 
       :host {
-        background: oklch(43.85% 0.129 129.5 / 79%);
+        --s: 23px; /* control the size */
+        --c1: #71c2b1;
+        --c2: #94c7b6;
+
+        --g1: / calc(2 * var(--s)) calc(2 * var(--s))
+          radial-gradient(at 100% 0, var(--c2) 17.5%, #0000 18%);
+        --g2: / calc(2 * var(--s)) calc(2 * var(--s))
+          radial-gradient(at 0 100%, var(--c2) 17.5%, #0000 18%);
+        --_s: 0 calc(var(--s) / 2) / var(--s) var(--s);
+        background: calc(var(--s) / 2) var(--s) var(--g1),
+          calc(var(--s) / -2) 0 var(--g1), calc(var(--s) / -2) var(--s) var(--g2),
+          calc(var(--s) / 2) 0 var(--g2),
+          radial-gradient(at 100% 0, var(--c1) 35%, #0000 35.5%) var(--_s),
+          radial-gradient(at 0 100%, var(--c1) 35%, #0000 35.5%) var(--_s),
+          repeating-conic-gradient(from 45deg, var(--c1) 0 25%, var(--c2) 0 50%) 0 0 /
+            var(--s) var(--s);
         color: white;
         border: 1px solid black;
         box-shadow: inset 0 1px 1px rgba(255 255 255 / 0.2);
@@ -69,7 +84,8 @@
           margin-block-end: 0;
         }
         & a {
-          color: #15803d;
+          color: #ffffff;
+          text-
         }
       }
       
