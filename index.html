@@ -24,8 +24,8 @@
 
       :host {
         --s: 23px; /* control the size */
-        --c1: #71c2b1;
-        --c2: #94c7b6;
+        --c1: #415c56;
+        --c2: #063223;
 
         --g1: / calc(2 * var(--s)) calc(2 * var(--s))
           radial-gradient(at 100% 0, var(--c2) 17.5%, #0000 18%);
@@ -87,6 +87,17 @@
           color: #ffffff;
           text-
         }
+      }
+
+      #blur {
+        --r: 5px;
+        position: absolute;
+        bottom: 100vh;
+        filter: blur(5px);
+      }
+
+      #blur, .text::before {
+        transform: translate(-0.125em, -0.125em);
       }
       
       fieldset {
@@ -207,14 +218,18 @@
 </template>
 
 <bio-machine>
-  <div>### Hey!
+  <div>### Hey there!
     
 I’m a **developer and a journalist** and I am also volunteering with journalistic deep and throrough investicative techniques in [Tutkivan journalismin yhdistys](https://tutkiva.fi).
 
-This year I graduated [Tampere University](http://tuni.fi), and I am interested in photography and visualizations.
+This year I graduated from [Tampere University](http://tuni.fi), and I am interested in photography and visualizations.
 
 Recently I have worked in Yle News, and Finnish Sanoma Oy.
 
-I’m big on better newspaper stories and creation of involved exclusive data stories to explain the world.</div>
+I’m big on better newspaper stories and creation of involved exclusive data stories to explain the world.
+
+contact me by email, by sending <a href="mailto:confirmolli@outlook.com">confirmolli@outlook.com</a> and put <span id="blur">"</span>Hey!<span id="blur">"</span> -in the subject box. Let's start building something soon. 
+</div>
+
 </bio-machine>
 </body>
